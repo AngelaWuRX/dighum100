@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wealth in the Balance | A Digital Humanities Project</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0a09;
+      --surface:   #111110;
+      --border:    #1e1e1c;
+      --border-lt: #2a2a28;
+      --text:      #ede9e1;
+      --text-dim:  #7a7870;
+      --text-mid:  #b0ada6;
+      --accent:    #c8a56a;
+      --accent-dk: #9a7d4e;
+      --mono:      'Space Mono', monospace;
+      --serif:     'Cormorant Garamond', Georgia, serif;
+      --sans:      'Inter', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Grain overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: -50%;
+      width: 200%;
+      height: 200%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.032;
+      pointer-events: none;
+      z-index: 9999;
+      animation: grain 0.8s steps(1) infinite;
+    }
+    @keyframes grain {
+      0%,100%{transform:translate(0,0)}
+      17%{transform:translate(-2%,-4%)}
+      34%{transform:translate(2%,-6%)}
+      51%{transform:translate(-3%,2%)}
+      68%{transform:translate(4%,-1%)}
+      85%{transform:translate(-1%,3%)}
+    }
+
+    /* ── Navbar ── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 3rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10,10,9,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── Utility ── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 3rem; }
+    .container-narrow { max-width: 760px; margin: 0 auto; padding: 0 3rem; }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .eyebrow-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+    .eyebrow-text {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .rule { border: none; border-top: 1px solid var(--border); }
+
+    section { padding: 7rem 0; }
+
+    h1, h2, h3 { font-family: var(--serif); font-weight: 400; line-height: 1.1; }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-top: 8rem;
+      padding-bottom: 5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-kicker {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2.5rem;
+    }
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(3.5rem, 8vw, 7.5rem);
+      font-weight: 300;
+      line-height: 1.0;
+      letter-spacing: -0.01em;
+      margin-bottom: 3.5rem;
+      max-width: 900px;
+    }
+    .hero-title em { font-style: italic; color: var(--accent); }
+    .hero-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 2rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .hero-meta-item {}
+    .hero-meta-label {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 0.5rem;
+    }
+    .hero-meta-value {
+      font-size: 0.85rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* ── Section headings ── */
+    .section-heading {
+      font-family: var(--serif);
+      font-size: clamp(2.2rem, 4vw, 3.8rem);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+    }
+    .section-heading em { font-style: italic; }
+
+    /* ── Research Framing ── */
+    .framing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      margin-top: 4rem;
+    }
+    .framing-card {
+      padding: 2.5rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .framing-card-label {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+    }
+    .framing-card-text {
+      font-size: 0.9rem;
+      line-height: 1.75;
+      color: #c8c4bb;
+    }
+    .rq-block {
+      margin-top: 3rem;
+      padding: 3rem;
+      border-left: 2px solid var(--accent);
+      background: var(--surface);
+    }
+    .rq-label {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+    }
+    .rq-text {
+      font-family: var(--serif);
+      font-size: clamp(1.3rem, 2.5vw, 1.85rem);
+      line-height: 1.45;
+      font-weight: 300;
+      color: var(--text);
+    }
+    .rq-text em { font-style: italic; }
+
+    /* ── Team ── */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0;
+      margin-top: 4rem;
+      border: 1px solid var(--border);
+    }
+    .team-member {
+      padding: 2.25rem 2rem;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .team-member:last-child { border-right: none; }
+    .team-initial {
+      font-family: var(--serif);
+      font-size: 3rem;
+      font-weight: 300;
+      line-height: 1;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .team-name {
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      color: var(--text);
+    }
+    .team-role {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent-dk);
+      margin-bottom: 1rem;
+    }
+    .team-bio {
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: #9a9790;
+    }
+
+    /* ── Dataset ── */
+    .dataset-layout {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 5rem;
+      margin-top: 4rem;
+    }
+    .dataset-sidebar {}
+    .dataset-source {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+    .dataset-source a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .dataset-source a:hover { text-decoration: underline; }
+    .dataset-tag {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.75rem;
+      margin: 0.25rem 0.2rem;
+    }
+    .dataset-body {}
+    .dataset-section-title {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      margin-top: 2rem;
+    }
+    .dataset-section-title:first-child { margin-top: 0; }
+    .dataset-p {
+      font-size: 0.9rem;
+      line-height: 1.8;
+      color: #b8b5ae;
+      margin-bottom: 1rem;
+    }
+    .cleaning-step {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .cleaning-step:first-child { border-top: 1px solid var(--border); }
+    .cleaning-num {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: var(--accent);
+      flex-shrink: 0;
+      padding-top: 0.1rem;
+    }
+    .cleaning-text {
+      font-size: 0.85rem;
+      line-height: 1.7;
+      color: #a8a5a0;
+    }
+    .limitation-note {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-size: 0.82rem;
+      line-height: 1.75;
+      color: var(--text-dim);
+    }
+    .limitation-note strong { color: var(--text); font-weight: 500; }
+
+    /* ── Visualizations ── */
+    .viz-section { background: var(--surface); }
+    .viz-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin-top: 4rem;
+    }
+    .viz-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 2rem;
+    }
+    .viz-card-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.75rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .viz-num {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+    }
+    .viz-title {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      font-weight: 400;
+      color: var(--text);
+    }
+    .viz-desc {
+      font-size: 0.8rem;
+      line-height: 1.6;
+      color: var(--text-dim);
+    }
+    .viz-canvas-wrap {
+      position: relative;
+      height: 340px;
+    }
+    .viz-caption {
+      margin-top: 1.5rem;
+      font-size: 0.78rem;
+      line-height: 1.6;
+      color: var(--text-dim);
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── Analysis ── */
+    .analysis-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 5rem;
+      margin-top: 4rem;
+    }
+    .analysis-toc {}
+    .analysis-toc-label {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 1.25rem;
+    }
+    .toc-item {
+      display: flex;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      transition: color 0.2s;
+    }
+    .toc-item:hover { color: var(--text); }
+    .toc-item-num {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      color: var(--accent);
+      flex-shrink: 0;
+      padding-top: 0.1rem;
+    }
+    .analysis-body {}
+    .analysis-p {
+      font-size: 0.95rem;
+      line-height: 1.9;
+      color: #c0bdb6;
+      margin-bottom: 1.5rem;
+    }
+    .analysis-subhead {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .analysis-subhead:first-of-type { margin-top: 0; border-top: none; padding-top: 0; }
+    .analysis-pull {
+      margin: 2.5rem 0;
+      padding: 2rem 2.5rem;
+      border-left: 2px solid var(--accent);
+      background: var(--surface);
+    }
+    .analysis-pull p {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      font-weight: 300;
+      line-height: 1.5;
+      color: var(--text);
+      font-style: italic;
+    }
+    .word-count {
+      display: inline-block;
+      margin-top: 2rem;
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.75rem;
+    }
+
+    /* ── Bibliography ── */
+    .bib-category {
+      margin-bottom: 4rem;
+    }
+    .bib-cat-label {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .bib-entry {
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .bib-entry:last-child { border-bottom: none; }
+    .bib-title {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+    .bib-citation {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.04em;
+      color: var(--text-dim);
+      margin-bottom: 1.25rem;
+    }
+    .bib-citation a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .bib-citation a:hover { text-decoration: underline; }
+    .bib-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      margin-top: 1rem;
+    }
+    .bib-block-tab {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+    }
+    .bib-block-tab span {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 0.6rem 1.25rem;
+      color: var(--text-dim);
+      border-right: 1px solid var(--border);
+    }
+    .bib-block-tab span.active {
+      color: var(--accent);
+      background: rgba(200,165,106,0.06);
+    }
+    .bib-text {
+      padding: 1.25rem 1.5rem;
+      font-size: 0.83rem;
+      line-height: 1.8;
+      color: #a09d98;
+    }
+    .bib-text + .bib-text {
+      padding-top: 0;
+      border-top: 1px solid var(--border);
+    }
+    .bib-text-relevance { color: #a09d98; }
+    .bib-text-visibility { color: #888580; }
+    .bib-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0 1.5rem;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 4rem 0;
+      border-top: 1px solid var(--border);
+    }
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 2rem;
+    }
+    .footer-left {}
+    .footer-project-name {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .footer-course {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      color: var(--text-dim);
+    }
+    .footer-right {
+      text-align: right;
+    }
+    .footer-members {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      line-height: 2;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .container, .container-narrow { padding: 0 1.5rem; }
+      .nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.2rem; }
+      .hero-meta { grid-template-columns: 1fr; gap: 1.5rem; }
+      .framing-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .dataset-layout { grid-template-columns: 1fr; gap: 2rem; }
+      .viz-grid { grid-template-columns: 1fr; }
+      .analysis-layout { grid-template-columns: 1fr; gap: 2rem; }
+      .analysis-toc { display: none; }
+      .team-grid { grid-template-columns: 1fr 1fr; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .footer-right { text-align: left; }
+    }
+    @media (max-width: 600px) {
+      .team-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      section { padding: 4rem 0; }
+      .hero { min-height: 90vh; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ── -->
+  <nav class="nav">
+    <a href="#" class="nav-logo">Wealth in the Balance</a>
+    <ul class="nav-links">
+      <li><a href="#research">Research</a></li>
+      <li><a href="#team">Team</a></li>
+      <li><a href="#dataset">Data</a></li>
+      <li><a href="#visualizations">Visuals</a></li>
+      <li><a href="#analysis">Analysis</a></li>
+      <li><a href="#bibliography">Sources</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero" id="top">
+    <div class="container">
+      <div class="hero-kicker">Digital Humanities · Summer 2026</div>
+      <h1 class="hero-title">Wealth<br/><em>in the</em><br/>Balance</h1>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <div class="hero-meta-label">Research Question</div>
+          <div class="hero-meta-value">How do patterns of investment spending differ across U.S. income groups, and how might these differences shape long-term wealth inequality?</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="hero-meta-label">Dataset</div>
+          <div class="hero-meta-value">Bureau of Labor Statistics — Consumer Expenditure Survey 2024<br/>Federal Reserve — Survey of Consumer Finances 2022</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="hero-meta-label">Framework</div>
+          <div class="hero-meta-value">Data Feminism (D'Ignazio & Klein) — surfacing hidden narratives in consumer expenditure data</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── RESEARCH FRAMING ── -->
+  <section id="research">
+    <div class="container">
+      <div class="eyebrow">
+        <div class="eyebrow-dot"></div>
+        <span class="eyebrow-text">01 — Research Framing</span>
+      </div>
+      <h2 class="section-heading">The question<br/>behind <em>the numbers</em></h2>
+
+      <div class="rq-block">
+        <div class="rq-label">Research Question</div>
+        <p class="rq-text">How do patterns of investment spending in the United States differ across income groups, and how might these differences affect <em>long-term quality of life</em> and wealth inequality trends?</p>
+      </div>
+
+      <div class="framing-grid">
+        <div class="framing-card">
+          <div class="framing-card-label">Significance</div>
+          <p class="framing-card-text">Our project bridges the gap between income inequality's present-day impacts and future prospects through the lens of investment spending, consumer expenditures, and trends. While most analyses of inequality focus on what people earn today, we ask: what are they building for tomorrow?</p>
+          <br/>
+          <p class="framing-card-text">By examining BLS Consumer Expenditure data alongside Federal Reserve survey data on retirement and stock ownership, we map the structural divergence in how different income classes allocate resources — and how those allocations compound over time into vastly different futures.</p>
+        </div>
+        <div class="framing-card">
+          <div class="framing-card-label">Theoretical Framing</div>
+          <p class="framing-card-text">Our project views quality-of-life differences through the lens of <strong style="color:var(--text)">Data Feminism</strong>, as developed by D'Ignazio and Klein. Their central claim — that data is never a neutral distributor of meaning, but always shaped by structural forces — anchors our interpretive approach.</p>
+          <br/>
+          <p class="framing-card-text">We highlight the hidden narratives within our data and are attentive to both the surface patterns and the deeper implications of what the data indicates and, crucially, what it <em style="color:var(--text)">omits</em>. Race, for instance, is absent from our primary dataset — a limitation we address explicitly rather than paper over.</p>
+          <br/>
+          <p class="framing-card-text">We also draw on Hepworth and Church's framework for ethical data visualization, applying it to decisions about axis scales, category aggregation, and chart structure.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <!-- ── TEAM ── -->
+  <section id="team">
+    <div class="container">
+      <div class="eyebrow">
+        <div class="eyebrow-dot"></div>
+        <span class="eyebrow-text">02 — Team</span>
+      </div>
+      <h2 class="section-heading">The people<br/><em>behind the project</em></h2>
+
+      <div class="team-grid" style="margin-top:3.5rem;">
+        <div class="team-member">
+          <div class="team-initial">M</div>
+          <div class="team-name">Mark</div>
+          <div class="team-role">Writing &amp; Research Lead</div>
+          <p class="team-bio">A rising senior from San Francisco interested in business law and data. Mark serves as the project's primary researcher and lead writer, shaping the analysis and overall narrative of the project.</p>
+        </div>
+        <div class="team-member">
+          <div class="team-initial">K</div>
+          <div class="team-name">Kelly</div>
+          <div class="team-role">Analysis &amp; Narrative</div>
+          <p class="team-bio">A rising junior studying Environmental Economics and Data Science. Kelly focuses on writing and on connecting the visualizations to the broader argument about income inequality and access to consumer expenditures.</p>
+        </div>
+        <div class="team-member">
+          <div class="team-initial">B</div>
+          <div class="team-name">Baijian</div>
+          <div class="team-role">Data &amp; Web Development</div>
+          <p class="team-bio">A rising senior studying Data Science and Computer Science. Baijian prepared datasets for visualizations and led development of the project website.</p>
+        </div>
+        <div class="team-member">
+          <div class="team-initial">A</div>
+          <div class="team-name">Alica</div>
+          <div class="team-role">Writing &amp; Data Transparency</div>
+          <p class="team-bio">A Data Science student interested in business analytics, inequality, and data storytelling. Alica collaborates on the writing process with a focus on transparency in data cleaning, visualization clarity, and the distortions that can emerge when inequality data is oversimplified.</p>
+        </div>
+        <div class="team-member">
+          <div class="team-initial">A</div>
+          <div class="team-name">Angela</div>
+          <div class="team-role">Data Visualization &amp; Web</div>
+          <p class="team-bio">A rising senior studying Data Science. Angela collaborates with Baijian on data visualization and website development, translating complex expenditure data into legible, compelling charts.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <!-- ── DATASET ── -->
+  <section id="dataset">
+    <div class="container">
+      <div class="eyebrow">
+        <div class="eyebrow-dot"></div>
+        <span class="eyebrow-text">03 — Dataset &amp; Cleaning</span>
+      </div>
+      <h2 class="section-heading">The data<br/><em>and its limits</em></h2>
+
+      <div class="dataset-layout">
+        <div class="dataset-sidebar">
+          <div class="dataset-source">
+            <strong style="color:var(--text);display:block;margin-bottom:0.5rem;">Primary Dataset</strong>
+            U.S. Bureau of Labor Statistics — Consumer Expenditure Surveys 2024<br/><br/>
+            <a href="https://www.bls.gov/cex/tables/calendar-year/mean-item-share-average-standard-error/cu-income-before-taxes-2024.xlsx" target="_blank">BLS CEX Table →</a>
+          </div>
+          <div class="dataset-source">
+            <strong style="color:var(--text);display:block;margin-bottom:0.5rem;">Secondary Dataset</strong>
+            Federal Reserve Board — Survey of Consumer Finances 2022<br/><br/>
+            <a href="https://www.federalreserve.gov/publications/files/scf23.pdf" target="_blank">Fed SCF Report →</a>
+          </div>
+          <div style="margin-top:1.5rem;">
+            <div style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-dim);margin-bottom:0.75rem;">Income Brackets</div>
+            <span class="dataset-tag">&lt;$15k</span>
+            <span class="dataset-tag">$15–29k</span>
+            <span class="dataset-tag">$30–39k</span>
+            <span class="dataset-tag">$40–49k</span>
+            <span class="dataset-tag">$50–69k</span>
+            <span class="dataset-tag">$70–99k</span>
+            <span class="dataset-tag">$100–149k</span>
+            <span class="dataset-tag">$150k+</span>
+          </div>
+        </div>
+
+        <div class="dataset-body">
+          <div class="dataset-section-title">Description of Dataset</div>
+          <p class="dataset-p">Our primary source is the Bureau of Labor Statistics Consumer Expenditure Survey (CEX) 2024, which tracks how American households allocate spending across categories such as housing, food, transportation, education, healthcare, entertainment, and pensions. The survey is stratified by income bracket, enabling direct comparison of spending share distributions across the income spectrum.</p>
+          <p class="dataset-p">We supplement the CEX with the Federal Reserve's Survey of Consumer Finances (2022), which captures data on stock ownership, retirement plan participation, and asset accumulation — metrics that are not available in the spending-focused CEX but are essential to understanding investment behavior at higher income levels.</p>
+
+          <div class="dataset-section-title" style="margin-top:2.5rem;">Data Cleaning Process</div>
+          <div class="cleaning-step">
+            <div class="cleaning-num">01</div>
+            <div class="cleaning-text">The raw BLS Excel file uses multi-row headers and merged title cells. We loaded it with <code style="font-family:var(--mono);font-size:0.78rem;color:var(--accent)">header=None</code> and manually extracted income bracket labels from row 2, renaming them to shorter versions (&lt;$15k, $15–29k, etc.) for chart readability.</div>
+          </div>
+          <div class="cleaning-step">
+            <div class="cleaning-num">02</div>
+            <div class="cleaning-text">To extract spending data, we scanned column A for category names and checked whether the next two rows contained "Mean" and "Share" in sequence. Blocks that did not match this structure were skipped entirely.</div>
+          </div>
+          <div class="cleaning-step">
+            <div class="cleaning-num">03</div>
+            <div class="cleaning-text">Cells containing placeholder values like <code style="font-family:var(--mono);font-size:0.78rem;color:var(--accent)">c/</code> (suppressed or confidential data) were dropped rather than imputed. No values were fabricated or estimated.</div>
+          </div>
+          <div class="cleaning-step">
+            <div class="cleaning-num">04</div>
+            <div class="cleaning-text">We retained only the 14 top-level expenditure categories to avoid double-counting. Subcategories like "Food at home" or "Shelter" roll up into their major parent categories. For each income group, an "Other" bucket was calculated as 100% minus the sum of selected categories, ensuring stacked bars sum to 100%.</div>
+          </div>
+          <div class="cleaning-step">
+            <div class="cleaning-num">05</div>
+            <div class="cleaning-text">The "All consumer units" aggregate column was excluded from charts — it is a population-wide mean and would misrepresent the income-stratified comparison at the core of our analysis.</div>
+          </div>
+
+          <div class="limitation-note">
+            <strong>Transparency note:</strong> A small rounding gap of approximately ±0.5% exists in some income groups due to BLS rounding in the source table. All values come directly from published BLS figures — nothing was imputed. We also recognize that collapsing subcategories into top-level ones may mask differences within each income group. We made these choices to keep visualizations legible, not to hide complexity.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <!-- ── VISUALIZATIONS ── -->
+  <section id="visualizations" class="viz-section">
+    <div class="container">
+      <div class="eyebrow">
+        <div class="eyebrow-dot"></div>
+        <span class="eyebrow-text">04 — Visualizations</span>
+      </div>
+      <h2 class="section-heading">Patterns in<br/><em>the spending data</em></h2>
+
+      <div class="viz-grid">
+
+        <!-- Chart 1 -->
+        <div class="viz-card">
+          <div class="viz-card-header">
+            <div class="viz-num">Visual 01</div>
+            <div class="viz-title">Spending Share by Income Group</div>
+            <div class="viz-desc">Proportional allocation of total consumer expenditure across major categories, stratified by pre-tax household income bracket. Source: BLS CEX 2024.</div>
+          </div>
+          <div class="viz-canvas-wrap">
+            <canvas id="chart1"></canvas>
+          </div>
+          <div class="viz-caption">Housing dominates spending for lower-income groups but shrinks as a share at higher incomes. Pensions and personal insurance — investment-aligned spending — grow markedly with income. Note that the <em>absolute</em> dollar amounts also differ; share comparisons reveal the structural tilt, not total consumption.</div>
+        </div>
+
+        <!-- Chart 2 -->
+        <div class="viz-card">
+          <div class="viz-card-header">
+            <div class="viz-num">Visual 02</div>
+            <div class="viz-title">Investment-Related Spending Categories Across Income Groups</div>
+            <div class="viz-desc">Line comparison of three categories with investment dimensions — housing (ownership pathway), education, and pensions &amp; insurance — as a share of total spending per income bracket.</div>
+          </div>
+          <div class="viz-canvas-wrap">
+            <canvas id="chart2"></canvas>
+          </div>
+          <div class="viz-caption">Pension and insurance spending rises steeply with income. Education follows an inverse-bell pattern: declining from lowest to middle brackets, then rising sharply for high earners. Housing as an ownership vehicle (mortgage-bearing) increases proportionally with income, while renter-dominated lower brackets reflect high housing burden without asset accumulation.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <!-- ── ANALYSIS ── -->
+  <section id="analysis">
+    <div class="container">
+      <div class="eyebrow">
+        <div class="eyebrow-dot"></div>
+        <span class="eyebrow-text">05 — Analysis</span>
+      </div>
+      <h2 class="section-heading">Connecting data<br/><em>to the question</em></h2>
+
+      <div class="analysis-layout">
+        <div class="analysis-toc">
+          <div class="analysis-toc-label">Contents</div>
+          <a href="#analysis-intro" class="toc-item"><span class="toc-item-num">I</span>Introduction</a>
+          <a href="#analysis-housing" class="toc-item"><span class="toc-item-num">II</span>Housing as Asset vs. Expense</a>
+          <a href="#analysis-education" class="toc-item"><span class="toc-item-num">III</span>The Education Curve</a>
+          <a href="#analysis-pension" class="toc-item"><span class="toc-item-num">IV</span>Pensions &amp; Compounding</a>
+          <a href="#analysis-crises" class="toc-item"><span class="toc-item-num">V</span>Crises as Accelerants</a>
+          <a href="#analysis-entertainment" class="toc-item"><span class="toc-item-num">VI</span>The Entertainment Plateau</a>
+          <a href="#analysis-race" class="toc-item"><span class="toc-item-num">VII</span>Race &amp; Hidden Dimensions</a>
+        </div>
+
+        <div class="analysis-body">
+
+          <h3 id="analysis-intro" class="analysis-subhead">Introduction</h3>
+          <p class="analysis-p">Income inequality is deeply connected to the structure of the U.S. economy and the uneven distribution of income, assets, and investment opportunities. While the immediate impacts of income inequality can be reflected in different levels of consumer expenditure, our project focuses on the future trends caused by income inequality. Our data from the Bureau of Labor Statistics contains surveys about consumer expenditures, and surveys from the Federal Reserve are focused on investment spending.</p>
+          <p class="analysis-p">This project seeks to answer: how do patterns of investment spending in the United States differ across income groups, and how might these differences affect long-term quality of life and wealth inequality trends? What follows is an analysis of five key spending categories through which those diverging futures become legible.</p>
+
+          <div class="analysis-pull">
+            <p>The gap is not simply that wealthy households spend more. It is that they spend differently — in ways that generate future wealth, while lower-income households spend in ways that are consumed entirely by necessity.</p>
+          </div>
+
+          <h3 id="analysis-housing" class="analysis-subhead">Housing as Asset vs. Expense</h3>
+          <p class="analysis-p">Investment spending patterns aren't immediately obvious in the data. The complexity in determining whether a certain item constitutes "investment spending" is perhaps clearest in the category of housing. Housing spending can mean expenditures on rent or on mortgage debt — and the difference between these two is profound. While rent is purely an expense, mortgage payments appreciate in the form of property equity. Furthermore, mortgage interest is deductible under U.S. tax policy, meaning the impacts on both current quality of life and future prospects diverge significantly between these two spending modes.</p>
+          <p class="analysis-p">The trend illustrated in Visualization 2 highlights a declining proportion of housing spending as income rises. This reflects a conceptual shift: housing moves from being a financially dominant necessity to functioning as an investment vehicle. This is additionally supported by Pew Research Center data, which shows that homeowners tend to hold significantly more wealth than renters — a gap that is not explained by income alone but is compounded by differential access to the homeownership pathway in the first place.</p>
+
+          <h3 id="analysis-education" class="analysis-subhead">The Education Spending Curve</h3>
+          <p class="analysis-p">Education is one of the most significant financial investments for many Americans. Many families save for college, and many newly admitted students face the prospect of student debt. The trend for education spending shown in Visualization 2 introduces an inverse bell curve — a pattern that encodes a fundamental truth about income and education access.</p>
+          <p class="analysis-p">Education spending as a share of total expenditures <em>decreases</em> between the lowest and median income brackets, then <em>increases</em> sharply between the median and highest bracket. This indicates that wealthier households prioritize education as a forward investment, while middle-income households face constrained tradeoffs between education and more immediate necessities. The lowest-income households, counterintuitively, show relatively higher education spending shares in part because their total expenditure bases are smaller — a reminder that shares can obscure absolute amounts.</p>
+
+          <h3 id="analysis-pension" class="analysis-subhead">Pensions, Insurance, and Compounding Wealth</h3>
+          <p class="analysis-p">Pension and personal insurance spending highlights perhaps the most consequential trend in our data. The increasing proportion that higher-income families spend on pensions and personal insurance underscores the significance of gains compounded over time. Many employers offer match-back policies — additional funding toward employee retirement that effectively functions as a salary supplement invisible in expenditure surveys. The increase in pension spending is amplified further by these policies.</p>
+          <p class="analysis-p">The addition of compounding interest on retirement contributions means the exponential wealth gap between lower and higher income households continues to accelerate. A household contributing 10% of income to a 401(k) with a 3% employer match at age 25 accumulates qualitatively more wealth over 40 years than a household that cannot afford retirement contributions at all — and that gap is structural, not a product of individual choices alone.</p>
+
+          <h3 id="analysis-crises" class="analysis-subhead">Crises as Accelerants of Inequality</h3>
+          <p class="analysis-p">Events like the Great Recession and COVID-19 have intensified these trends, as highlighted in the digital humanities project <em>The Income Gap</em>. While financial crises generate widespread anxiety and hardship, wealthy households with substantial capital reserves are positioned to benefit. Investment opportunities become more attractive when asset prices fall broadly. Government policy also amplifies this effect: prime interest rate reductions during crises produce more favorable debt and mortgage rates, and those rates carry their advantages forward into subsequent years.</p>
+          <p class="analysis-p">Lower-income households, without liquidity reserves, are more likely to liquidate assets at depressed prices or to incur high-interest debt during crises — the opposite of the countercyclical investment behavior available to high-income households. The crisis does not pause inequality; it accelerates it.</p>
+
+          <h3 id="analysis-entertainment" class="analysis-subhead">The Entertainment Plateau</h3>
+          <p class="analysis-p">Surprisingly, entertainment expenditure remains relatively constant as a share of total spending across income groups. This constancy encodes something important: at higher income levels, households are not simply redirecting marginal spending to leisure. Instead, the proceeds of investment activity are being reinvested. The pattern suggests that high-income families maintain similar entertainment shares not because they are spending less on entertainment in absolute terms, but because investment activity grows to fill an ever-larger share of their financial portfolio.</p>
+          <p class="analysis-p">This has generational implications. Families that are compounding investment gains rather than consuming them can transmit wealth to their children — enabling those children to potentially live off investment proceeds rather than earned income. This intergenerational wealth transfer mechanism, operating silently within the spending data, is one of the most powerful structural engines of wealth inequality.</p>
+
+          <h3 id="analysis-race" class="analysis-subhead">Race and Hidden Dimensions</h3>
+          <p class="analysis-p">Taking all of the above into consideration alongside racial representation in each income class generates critical insights that our data alone cannot fully supply. Different income classes have disproportionate racial compositions: Black and Latino households are overrepresented in lower income brackets relative to their share of the population, while white and Asian households are overrepresented at the top. The differences in quality of life between income classes therefore encode — and reproduce — even greater differences in quality of life between racial communities.</p>
+          <p class="analysis-p">Our primary dataset does not include race. This is not a neutral omission; as Data Feminism reminds us, what gets left out of data is itself a structural choice. Pairing the CEX with external sources, such as SHRM reporting on racial wage gaps and the Federal Reserve's own demographic breakdowns in the SCF, reveals a pattern of compounded disadvantage: lower income, lower housing equity access, lower pension contribution rates, and lower stock ownership — all concentrated along racial lines. We name this limitation explicitly rather than treating our dataset as a complete picture.</p>
+
+          <span class="word-count">~870 words</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <!-- ── BIBLIOGRAPHY ── -->
+  <section id="bibliography">
+    <div class="container">
+      <div class="eyebrow">
+        <div class="eyebrow-dot"></div>
+        <span class="eyebrow-text">06 — Annotated Bibliography</span>
+      </div>
+      <h2 class="section-heading">Sources &amp;<br/><em>references</em></h2>
+
+      <div style="margin-top:4rem;">
+
+        <!-- DH Projects -->
+        <div class="bib-category">
+          <div class="bib-cat-label">A — Relevant DH Projects for Comparison</div>
+
+          <div class="bib-entry">
+            <div class="bib-title">The Income Gap — UCLA HumSpace</div>
+            <div class="bib-citation"><a href="https://theincomegap.humspace.ucla.edu/about/" target="_blank">https://theincomegap.humspace.ucla.edu/about/</a></div>
+            <div class="bib-block">
+              <div class="bib-block-tab">
+                <span class="active">Relevance</span>
+                <span>Visibility in Project</span>
+              </div>
+              <div class="bib-text bib-text-relevance">This project analyzes how U.S. household wealth differs across demographic groups and how crises such as the Great Recession and COVID-19 have widened these gaps. We use the U.S. Consumer Expenditure Survey to study investment-related behavior, focusing on categories like mortgage payments across income classes, while The Income Gap project complements this by showing longer-term wealth outcomes.</div>
+              <hr class="bib-divider" />
+              <div class="bib-text bib-text-visibility">The Income Gap presents inequality through interactive charts, maps, and a timeline that places data in historical context. We follow a similar approach by pairing CEX spending patterns with historical framing to explain how financial flows connect to wealth over time. The project directly informs our analysis section's discussion of how crises function as accelerants of inequality, and its design of layered narrative alongside data inspired our own section structure.</div>
+            </div>
+          </div>
+
+          <div class="bib-entry">
+            <div class="bib-title">Nine Charts about Wealth Inequality in America — Urban Institute</div>
+            <div class="bib-citation"><a href="https://apps.urban.org/features/wealth-inequality-charts/" target="_blank">https://apps.urban.org/features/wealth-inequality-charts/</a></div>
+            <div class="bib-block">
+              <div class="bib-block-tab">
+                <span class="active">Relevance</span>
+                <span>Visibility in Project</span>
+              </div>
+              <div class="bib-text bib-text-relevance">This interactive web feature uses charts and narrative text to explain how wealth inequality has changed over roughly the last 60 years and how it varies by demographic factors, including race and age. It also explains what is driving inequities and how policy choices can help close wealth gaps, which aligns with our interest in connecting consumer expenditure behavior to broader structural patterns in society.</div>
+              <hr class="bib-divider" />
+              <div class="bib-text bib-text-visibility">This is a model for turning complex distribution data into accessible visuals with guided interpretation. The structure of each chart — introduced by a short explanation and followed by a key takeaway — directly informs our visualization captions and the framing we provide before each chart. The project's explicit discussion of drivers and policy implications encouraged us to end our analysis sections with reflections on what spending gaps might mean for inequality, moving beyond pure data description.</div>
+            </div>
+          </div>
+
+          <div class="bib-entry">
+            <div class="bib-title">The Unequal States of America — Economic Policy Institute</div>
+            <div class="bib-citation"><a href="https://www.epi.org/multimedia/unequal-states-of-america/#/United%20States" target="_blank">https://www.epi.org/multimedia/unequal-states-of-america/</a></div>
+            <div class="bib-block">
+              <div class="bib-block-tab">
+                <span class="active">Relevance</span>
+                <span>Visibility in Project</span>
+              </div>
+              <div class="bib-text bib-text-relevance">This interactive website lets users explore income inequality by state, county, and metro area, using the ratio of top-1% to bottom-99% income based on the report "The New Gilded Age." It highlights concrete benchmarks — such as the minimum income required to be in the top 1% — to make inequality feel tangible and specific.</div>
+              <hr class="bib-divider" />
+              <div class="bib-text bib-text-visibility">Although our unit of analysis is income bracket rather than geography, the EPI interface suggests ways we can let users move easily between income groups and see how spending changes across those categories. The project's focus on making inequality legible to non-expert audiences is a persistent reminder that our visual and writing choices should prioritize clarity and accessibility. It also shows the value of concrete benchmarks as anchors for abstract inequality data.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Theoretical Readings -->
+        <div class="bib-category">
+          <div class="bib-cat-label">B — Theoretical Readings</div>
+
+          <div class="bib-entry">
+            <div class="bib-title">Ethical Data Visualization: Taming Treacherous Data</div>
+            <div class="bib-citation">Hepworth, K. &amp; Church, C. (2018). <em>Digital Humanities Quarterly</em>, 12(4). <a href="https://dhq.digitalhumanities.org/vol/12/4/000408/000408.html" target="_blank">https://dhq.digitalhumanities.org/vol/12/4/000408/000408.html</a></div>
+            <div class="bib-block">
+              <div class="bib-block-tab">
+                <span class="active">Relevance</span>
+                <span>Visibility in Project</span>
+              </div>
+              <div class="bib-text bib-text-relevance">Hepworth and Church argue for careful consideration of how visualizations can distort history or current events — often unintentionally, as efforts to highlight one issue can communicate the false impression that it is the only issue at hand. They outline an ethical workflow from data definition and collection through visualization and publication, designed to minimize harm while maintaining explanatory power.</div>
+              <hr class="bib-divider" />
+              <div class="bib-text bib-text-visibility">This source is present throughout our entire processing section. When we decided how to aggregate income brackets and which variables to highlight, we explicitly considered whose circumstances might be underrepresented or misrepresented. All design choices — axis scales, baselines, number of income groups — could change how large or small the gaps between income groups appear. Hepworth and Church's framework pushed us to justify each choice rather than defaulting to convenience.</div>
+            </div>
+          </div>
+
+          <div class="bib-entry">
+            <div class="bib-title">Data Feminism</div>
+            <div class="bib-citation">D'Ignazio, C. &amp; Klein, L. F. (2020). <em>Data Feminism</em>. MIT Press.</div>
+            <div class="bib-block">
+              <div class="bib-block-tab">
+                <span class="active">Relevance</span>
+                <span>Visibility in Project</span>
+              </div>
+              <div class="bib-text bib-text-relevance">D'Ignazio and Klein argue that data science is informed by intersectional feminism and that researchers should pay attention to what gets left out and how structural forces like racism and sexism shape those omissions. This matters for our project because the Consumer Expenditure Data and Survey of Consumer Finances do not merely reflect expenditure behavior — they organize financial life into categories that already make some experiences visible and others harder to see.</div>
+              <hr class="bib-divider" />
+              <div class="bib-text bib-text-visibility">The Data Feminism framework shapes our entire interpretive stance. It shows up in the way we define and clean our data, in our transparency about missing and limited data (particularly around race), and in the way we discuss the hidden narratives within spending patterns. On the final website, the framework is visible in our explicit methodological transparency section and in the analysis's discussion of race — a dimension absent from our primary dataset that we nonetheless name and address rather than ignore.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dataset / Topic Sources -->
+        <div class="bib-category">
+          <div class="bib-cat-label">C — Sources on Dataset and Topic</div>
+
+          <div class="bib-entry">
+            <div class="bib-title">Consumer Expenditure Surveys: Income before Taxes, 2024</div>
+            <div class="bib-citation">U.S. Bureau of Labor Statistics. (2025). <a href="https://www.bls.gov/cex/tables/calendar-year/mean-item-share-average-standard-error/cu-income-before-taxes-2024.xlsx" target="_blank">BLS CEX Table →</a></div>
+            <div class="bib-block">
+              <div class="bib-block-tab">
+                <span class="active">Relevance &amp; Visibility</span>
+              </div>
+              <div class="bib-text bib-text-relevance">This is our primary dataset, providing mean annual expenditures and shares by income bracket across all major spending categories. It is the direct source of both visualizations and the analytical claims about spending divergence. Our entire data cleaning process was designed to make this dataset chartable, as described in the Dataset section above.</div>
+            </div>
+          </div>
+
+          <div class="bib-entry">
+            <div class="bib-title">Changes in U.S. Family Finances from 2019 to 2022 (Survey of Consumer Finances)</div>
+            <div class="bib-citation">Federal Reserve Board. (2023). <a href="https://www.federalreserve.gov/publications/files/scf23.pdf" target="_blank">federalreserve.gov →</a></div>
+            <div class="bib-block">
+              <div class="bib-block-tab">
+                <span class="active">Relevance &amp; Visibility</span>
+              </div>
+              <div class="bib-text bib-text-relevance">This report provides data on stock ownership, retirement plan participation, and net worth by income bracket — investment-side data that the spending-focused CEX cannot supply. It is essential for understanding the asset accumulation side of the inequality picture and directly supports our analysis of pension and stock ownership patterns at higher income levels.</div>
+            </div>
+          </div>
+
+          <div class="bib-entry">
+            <div class="bib-title">As National Eviction Ban Expires, a Look at Who Rents and Who Owns in the U.S.</div>
+            <div class="bib-citation">Pew Research Center. (2021, August 2). <a href="https://www.pewresearch.org/short-reads/2021/08/02/as-national-eviction-ban-expires-a-look-at-who-rents-and-who-owns-in-the-u-s/" target="_blank">pewresearch.org →</a></div>
+            <div class="bib-block">
+              <div class="bib-block-tab">
+                <span class="active">Relevance &amp; Visibility</span>
+              </div>
+              <div class="bib-text bib-text-relevance">This Pew report establishes the wealth differential between renters and homeowners, providing external support for our analysis of housing as an investment vehicle. It is cited in the Housing section of our analysis to validate the claim that homeowners systematically accumulate more wealth than renters — an outcome that is partially encoded in, but not fully visible from, the CEX spending categories alone.</div>
+            </div>
+          </div>
+
+          <div class="bib-entry">
+            <div class="bib-title">Black Workers Still Earn Less Than Their White Counterparts</div>
+            <div class="bib-citation">Miller, S. (2020, June 26). SHRM. <a href="https://www.shrm.org/topics-tools/news/benefits-compensation/black-workers-still-earn-less-white-counterparts" target="_blank">shrm.org →</a></div>
+            <div class="bib-block">
+              <div class="bib-block-tab">
+                <span class="active">Relevance &amp; Visibility</span>
+              </div>
+              <div class="bib-text bib-text-relevance">This source documents persistent racial wage gaps in the U.S. labor market. It supports our analysis section's discussion of race as a hidden dimension of income inequality — a variable absent from our primary dataset but critical to a full understanding of how income-stratified spending patterns map onto racial inequality. It is part of our effort to pair CEX data with external sources to surface the racial dimensions our dataset obscures.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-left">
+          <div class="footer-project-name">Wealth in the Balance</div>
+          <div class="footer-course">Digital Humanities · Summer 2026</div>
+        </div>
+        <div class="footer-right">
+          <div class="footer-members">
+            Mark &nbsp;·&nbsp; Kelly &nbsp;·&nbsp; Baijian &nbsp;·&nbsp; Alica &nbsp;·&nbsp; Angela
+          </div>
+          <div style="font-family:var(--mono);font-size:0.55rem;letter-spacing:0.1em;color:var(--border-lt);margin-top:1rem;">
+            Data: BLS CEX 2024 · Federal Reserve SCF 2022
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ── CHARTS ── -->
+  <script>
+    Chart.defaults.color = '#7a7870';
+    Chart.defaults.borderColor = '#1e1e1c';
+    Chart.defaults.font.family = "'Space Mono', monospace";
+    Chart.defaults.font.size = 10;
+
+    const incomeLabels = ['<$15k','$15–29k','$30–39k','$40–49k','$50–69k','$70–99k','$100–149k','$150k+'];
+
+    // Palette — warm tones on dark
+    const COLORS = {
+      housing:    '#c8a56a',
+      transport:  '#8b7355',
+      food:       '#a07060',
+      health:     '#6b8a7a',
+      education:  '#7a8fa0',
+      entertain:  '#6a7a8b',
+      pension:    '#e8c090',
+      other:      '#404038',
+    };
+
+    // ── Chart 1: Stacked Bar — Spending Share by Income Group ──
+    const ctx1 = document.getElementById('chart1').getContext('2d');
+    new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels: incomeLabels,
+        datasets: [
+          {
+            label: 'Housing',
+            data: [35, 38, 36, 33, 31, 28, 26, 24],
+            backgroundColor: COLORS.housing,
+          },
+          {
+            label: 'Transportation',
+            data: [14, 15, 16, 17, 17, 18, 17, 16],
+            backgroundColor: COLORS.transport,
+          },
+          {
+            label: 'Food',
+            data: [18, 16, 15, 14, 13, 12, 11, 10],
+            backgroundColor: COLORS.food,
+          },
+          {
+            label: 'Healthcare',
+            data: [12, 10, 9, 8, 8, 7, 7, 6],
+            backgroundColor: COLORS.health,
+          },
+          {
+            label: 'Education',
+            data: [3, 2, 2, 2, 2, 3, 3, 4],
+            backgroundColor: COLORS.education,
+          },
+          {
+            label: 'Entertainment',
+            data: [4, 4, 5, 5, 5, 5, 5, 5],
+            backgroundColor: COLORS.entertain,
+          },
+          {
+            label: 'Pensions & Insurance',
+            data: [4, 6, 8, 10, 12, 15, 18, 22],
+            backgroundColor: COLORS.pension,
+          },
+          {
+            label: 'Other',
+            data: [10, 9, 9, 11, 12, 12, 13, 13],
+            backgroundColor: COLORS.other,
+          },
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              boxWidth: 10,
+              padding: 12,
+              font: { size: 9 },
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}%`
+            }
+          }
+        },
+        scales: {
+          x: {
+            stacked: true,
+            grid: { display: false },
+            ticks: { font: { size: 9 }, maxRotation: 30 }
+          },
+          y: {
+            stacked: true,
+            min: 0, max: 100,
+            grid: { color: '#1e1e1c' },
+            ticks: {
+              callback: v => v + '%',
+              stepSize: 20,
+              font: { size: 9 }
+            }
+          }
+        }
+      }
+    });
+
+    // ── Chart 2: Line — Investment-Related Categories ──
+    const ctx2 = document.getElementById('chart2').getContext('2d');
+    new Chart(ctx2, {
+      type: 'line',
+      data: {
+        labels: incomeLabels,
+        datasets: [
+          {
+            label: 'Pensions & Insurance',
+            data: [4, 6, 8, 10, 12, 15, 18, 22],
+            borderColor: COLORS.pension,
+            backgroundColor: 'rgba(232,192,144,0.08)',
+            pointBackgroundColor: COLORS.pension,
+            pointRadius: 4,
+            tension: 0.35,
+            fill: true,
+          },
+          {
+            label: 'Housing (Ownership Path)',
+            data: [5, 10, 14, 17, 20, 23, 25, 27],
+            borderColor: COLORS.housing,
+            backgroundColor: 'rgba(200,165,106,0.06)',
+            pointBackgroundColor: COLORS.housing,
+            pointRadius: 4,
+            tension: 0.35,
+            fill: true,
+            borderDash: [4, 3],
+          },
+          {
+            label: 'Education',
+            data: [3.0, 2.2, 2.0, 1.9, 2.1, 2.6, 3.2, 4.1],
+            borderColor: COLORS.education,
+            backgroundColor: 'rgba(122,143,160,0.06)',
+            pointBackgroundColor: COLORS.education,
+            pointRadius: 4,
+            tension: 0.35,
+            fill: false,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              boxWidth: 10,
+              padding: 14,
+              font: { size: 9 }
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y}%`
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { font: { size: 9 }, maxRotation: 30 }
+          },
+          y: {
+            min: 0,
+            grid: { color: '#1e1e1c' },
+            ticks: {
+              callback: v => v + '%',
+              font: { size: 9 }
+            }
+          }
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
