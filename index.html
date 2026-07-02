@@ -617,6 +617,44 @@
       color: var(--text);
       font-style: italic;
     }
+    .analysis-viz {
+      margin: 2.5rem 0 3rem;
+    }
+    .analysis-viz .viz-card {
+      background: var(--surface);
+    }
+    .analysis-figure {
+      margin: 2.5rem 0 3rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 1.75rem;
+    }
+    .analysis-figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--border);
+    }
+    .analysis-figure-caption {
+      margin-top: 1.25rem;
+      font-size: 0.85rem;
+      line-height: 1.75;
+      color: var(--text-mid);
+    }
+    .analysis-figure-caption strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+    .analysis-figure-points {
+      margin-top: 1rem;
+      padding-left: 1.25rem;
+      font-size: 0.85rem;
+      line-height: 1.75;
+      color: var(--text-dim);
+    }
+    .analysis-figure-points li {
+      margin-bottom: 0.5rem;
+    }
     .word-count {
       display: inline-block;
       margin-top: 2rem;
@@ -773,7 +811,6 @@
     <ul class="nav-links">
       <li><a href="#research">Research</a></li>
       <li><a href="#dataset">Data</a></li>
-      <li><a href="#visualizations">Visuals</a></li>
       <li><a href="#analysis">Analysis</a></li>
       <li><a href="#team">Team</a></li>
       <li><a href="#bibliography">Sources</a></li>
@@ -908,104 +945,12 @@
 
   <hr class="rule" />
 
-  <!-- ── VISUALIZATIONS ── -->
-  <section id="visualizations" class="viz-section">
-    <div class="container">
-      <div class="eyebrow">
-        <div class="eyebrow-dot"></div>
-        <span class="eyebrow-text">03 — Visualizations</span>
-      </div>
-      <h2 class="section-heading">Patterns in<br/><em>the spending data</em></h2>
-      <p style="margin-top:1.5rem;font-size:0.85rem;line-height:1.75;color:var(--text-dim);max-width:720px;">All charts below draw on published BLS Consumer Expenditure Survey figures, stratified by pre-tax household income. Source: <a href="#linkdata" style="color:var(--accent);text-decoration:none;">Consumer Expenditure Surveys: Income before Taxes, 2024</a>.</p>
-
-      <div class="viz-grid">
-
-        <!-- Chart 1 -->
-        <div class="viz-card">
-          <div class="viz-card-header">
-            <div class="viz-num">Visual 01</div>
-            <div class="viz-title">Spending Share by Income Group</div>
-            <div class="viz-desc">Proportional allocation of total consumer expenditure across major categories, stratified by pre-tax household income bracket. Source: <a href="#linkdata" style="color:var(--accent);text-decoration:none;">Consumer Expenditure Surveys: Income before Taxes, 2024</a>.</div>
-          </div>
-          <div class="viz-canvas-wrap">
-            <canvas id="chart1"></canvas>
-          </div>
-          <div class="viz-caption">Housing dominates spending for lower-income groups but shrinks as a share at higher incomes. Pensions and personal insurance — investment-aligned spending — grow markedly with income. Note that the <em>absolute</em> dollar amounts also differ; share comparisons reveal the structural tilt, not total consumption.</div>
-          <div class="viz-source">
-            <span class="viz-source-label">Data source</span>
-            <a href="#linkdata">Consumer Expenditure Surveys: Income before Taxes, 2024</a>
-            <span class="viz-source-detail">Mean expenditure <em>share</em> (%) by income bracket for Housing, Transportation, Food, Healthcare, Education, Entertainment, Pensions &amp; Insurance, and Other. Income groups: &lt;$15k through $150k+.</span>
-          </div>
-        </div>
-
-        <!-- Chart 2 -->
-        <div class="viz-card">
-          <div class="viz-card-header">
-            <div class="viz-num">Visual 02</div>
-            <div class="viz-title">Investment-Related Spending Categories Across Income Groups</div>
-            <div class="viz-desc">Line comparison of three categories with investment dimensions — housing (ownership pathway), education, and pensions &amp; insurance — as a share of total spending per income bracket. Source: <a href="#linkdata" style="color:var(--accent);text-decoration:none;">Consumer Expenditure Surveys: Income before Taxes, 2024</a>.</div>
-          </div>
-          <div class="viz-canvas-wrap">
-            <canvas id="chart2"></canvas>
-          </div>
-          <div class="viz-caption">Pension and insurance spending rises steeply with income. Education follows an inverse-bell pattern: declining from lowest to middle brackets, then rising sharply for high earners. Housing as an ownership vehicle (mortgage-bearing) increases proportionally with income, while renter-dominated lower brackets reflect high housing burden without asset accumulation.</div>
-          <div class="viz-source">
-            <span class="viz-source-label">Data source</span>
-            <a href="#linkdata">Consumer Expenditure Surveys: Income before Taxes, 2024</a>
-            <span class="viz-source-detail">Mean expenditure <em>share</em> (%) for Shelter (housing), Education, and Personal insurance and pensions by pre-tax income bracket.</span>
-          </div>
-        </div>
-
-        <!-- Chart 3 — Pension compounding timeline -->
-        <div class="viz-card viz-card-full">
-          <div class="viz-card-header">
-            <div class="viz-num">Visual 03</div>
-            <div class="viz-title">Pension &amp; Insurance — 20-Year Compounding Timeline</div>
-            <div class="viz-desc">Projected accumulation in the Pension &amp; Insurance category, starting from each income group's 2024 BLS mean spending. Each bracket contributes its actual annual spending each year, compounded at 7% over 20 years. An additional bar shows <em>$200k+</em> at a 15% annual return for comparison. Source: <a href="#linkdata" style="color:var(--accent);text-decoration:none;">Consumer Expenditure Surveys: Income before Taxes, 2024</a> (baseline inputs).</div>
-          </div>
-
-          <div class="viz-timeline-controls">
-            <div class="viz-timeline-year">
-              Selected year
-              <strong id="pensionYearLabel">Year 0 · 2024</strong>
-            </div>
-            <div class="viz-slider-wrap">
-              <div class="viz-slider-label">
-                <span>2024</span>
-                <span>Drag timeline →</span>
-                <span>2044</span>
-              </div>
-              <input type="range" class="viz-year-slider" id="pensionYearSlider" min="0" max="20" value="0" step="1" aria-label="Select projection year" />
-            </div>
-            <button type="button" class="viz-play-btn" id="pensionPlayBtn" aria-label="Pause timeline">Pause</button>
-          </div>
-
-          <div class="viz-canvas-wrap viz-canvas-wrap-tall">
-            <canvas id="chart3"></canvas>
-          </div>
-
-          <div class="viz-value-grid" id="pensionValueGrid"></div>
-
-          <div class="viz-caption">Assumes 7% annual return for all income brackets (a long-run market average, not a guarantee). The extra <em>$200k+ (15%)</em> bar uses a 15% return on the same contribution level. Y-axis is capped at a <strong style="color:var(--text);font-weight:500">$1M threshold</strong> — bars grow as the timeline plays; values that cross $1M turn gold.</div>
-          <div class="viz-source">
-            <span class="viz-source-label">Data source</span>
-            <a href="#linkdata">Consumer Expenditure Surveys: Income before Taxes, 2024</a>
-            <span class="viz-source-detail">Baseline and annual contribution inputs: mean expenditure ($) for <em>Personal insurance and pensions</em> by income bracket (rows 553–554). Years 1–20 are projected with assumed 7% and 15% annual returns — not published BLS figures.</span>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <hr class="rule" />
-
   <!-- ── ANALYSIS ── -->
   <section id="analysis">
     <div class="container">
       <div class="eyebrow">
         <div class="eyebrow-dot"></div>
-        <span class="eyebrow-text">04 — Analysis</span>
+        <span class="eyebrow-text">03 — Analysis</span>
       </div>
       <h2 class="section-heading">Connecting data<br/><em>to the question</em></h2>
 
@@ -1031,8 +976,46 @@
           <h3 id="analysis-intro" class="analysis-subhead">Introduction</h3>
           <p class="analysis-p">Income inequality is deeply connected to the structure of the U.S. economy and the uneven distribution of income, assets, and investment opportunities. While the immediate impacts of income inequality can be reflected in different levels of consumer expenditure, our project focuses on the future trends caused by income inequality. Our data from the Bureau of Labor Statistics contains surveys about consumer expenditures, and surveys from the Federal Reserve are focused on investment spending. This project seeks to answer these questions: how do patterns of investment spending in the United States differ across income groups, and how might these differences affect long-term quality of life and wealth inequality trends?</p>
 
+          <div id="visual-01" class="analysis-viz">
+            <div class="viz-card">
+              <div class="viz-card-header">
+                <div class="viz-num">Visual 01</div>
+                <div class="viz-title">Spending Share by Income Group</div>
+                <div class="viz-desc">Proportional allocation of total consumer expenditure across major categories, stratified by pre-tax household income bracket. Source: <a href="#linkdata" style="color:var(--accent);text-decoration:none;">Consumer Expenditure Surveys: Income before Taxes, 2024</a>.</div>
+              </div>
+              <div class="viz-canvas-wrap">
+                <canvas id="chart1"></canvas>
+              </div>
+              <div class="viz-caption">Housing dominates spending for lower-income groups but shrinks as a share at higher incomes. Pensions and personal insurance — investment-aligned spending — grow markedly with income. Note that the <em>absolute</em> dollar amounts also differ; share comparisons reveal the structural tilt, not total consumption.</div>
+              <div class="viz-source">
+                <span class="viz-source-label">Data source</span>
+                <a href="#linkdata">Consumer Expenditure Surveys: Income before Taxes, 2024</a>
+                <span class="viz-source-detail">Mean expenditure <em>share</em> (%) by income bracket for Housing, Transportation, Food, Healthcare, Education, Entertainment, Pensions &amp; Insurance, and Other. Income groups: &lt;$15k through $150k+.</span>
+              </div>
+            </div>
+          </div>
+
           <h3 id="analysis-housing" class="analysis-subhead">Housing</h3>
-          <p class="analysis-p">Investment spending patterns aren't immediately obvious in the data. Complexity in determining if a certain item is "investment spending" can be seen in "housing". Housing spending can be both in spending on rent or on mortgage debt. The difference between these two in this context is that while rent is purely an expense, expenditures on mortgage payments appreciate in the form of property. Furthermore, mortgage debt payments can be expensed under US tax policy, and therefore, the impacts on both current quality of life and future prospects are significantly different between expenditure choices. The trend as followed by Visualization 2 highlights the decreasing proportion of housing spending. This shows the conceptual shift in housing as a financially dominant necessity, to an investment vehicle. This concept is additionally supported by a survey by Pew Research Center, which claims that home owners tend to be more wealthy than renters.</p>
+          <p class="analysis-p">Investment spending patterns aren't immediately obvious in the data. Complexity in determining if a certain item is "investment spending" can be seen in "housing". Housing spending can be both in spending on rent or on mortgage debt. The difference between these two in this context is that while rent is purely an expense, expenditures on mortgage payments appreciate in the form of property. Furthermore, mortgage debt payments can be expensed under US tax policy, and therefore, the impacts on both current quality of life and future prospects are significantly different between expenditure choices. The trend as followed by Visualization 2 below highlights the decreasing proportion of housing spending. This shows the conceptual shift in housing as a financially dominant necessity, to an investment vehicle. This concept is additionally supported by a survey by Pew Research Center, which claims that home owners tend to be more wealthy than renters.</p>
+
+          <div id="visual-02" class="analysis-viz">
+            <div class="viz-card">
+              <div class="viz-card-header">
+                <div class="viz-num">Visual 02</div>
+                <div class="viz-title">Investment-Related Spending Categories Across Income Groups</div>
+                <div class="viz-desc">Line comparison of three categories with investment dimensions — housing (ownership pathway), education, and pensions &amp; insurance — as a share of total spending per income bracket. Source: <a href="#linkdata" style="color:var(--accent);text-decoration:none;">Consumer Expenditure Surveys: Income before Taxes, 2024</a>.</div>
+              </div>
+              <div class="viz-canvas-wrap">
+                <canvas id="chart2"></canvas>
+              </div>
+              <div class="viz-caption">Pension and insurance spending rises steeply with income. Education follows an inverse-bell pattern: declining from lowest to middle brackets, then rising sharply for high earners. Housing as an ownership vehicle (mortgage-bearing) increases proportionally with income, while renter-dominated lower brackets reflect high housing burden without asset accumulation.</div>
+              <div class="viz-source">
+                <span class="viz-source-label">Data source</span>
+                <a href="#linkdata">Consumer Expenditure Surveys: Income before Taxes, 2024</a>
+                <span class="viz-source-detail">Mean expenditure <em>share</em> (%) for Shelter (housing), Education, and Personal insurance and pensions by pre-tax income bracket.</span>
+              </div>
+            </div>
+          </div>
 
           <h3 id="analysis-education" class="analysis-subhead">Education</h3>
           <p class="analysis-p">Another key observation is in education spending. Education is one of the most significant financial investments for many Americans. Many families save for college, and many newly admitted students entertain the idea of student debt. The trend for education spending as shown by Visualization 2 introduces an inverse bell curve. This trend follows the idea that income varies proportionally with education. While education spending is decreasing between our lowest and median income brackets, it begins to increase between our median and highest income bracket, which indicates that wealthier households prioritize education. On the topic of education,</p>
@@ -1050,12 +1033,64 @@
           <p class="analysis-p">Taking all the above into consideration with respect to racial representations in each income class can generate critical insights. Given that different income classes have disproportionate representations of races, the difference in quality of life between the income classes means even greater differences in quality of life between different racial communities. While national survey data doesn't include races, pairing the data with other sources reveals concerning trends in the discussion of racial equality.</p>
 
           <h3 id="analysis-returns" class="analysis-subhead">Stock Ownership &amp; Returns</h3>
-          <p class="analysis-p">Stock ownership and retirement plan participation data can be found in the Federal Reserve's survey data. Different portfolios have different returns, and accounting for the various differences in returns between portfolios adds a level of complexity beyond the scope of this project. In the visualization above, we use the average return of the S&amp;P 500 index fund for all income classes. This visual shows that, even if all annual returns are the same among income classes, the effect of compounding intensifies the widening gap between income classes. The difference in wealth of a single generation compounds onto the next, regardless of differences in returns. The very last column is both grimmer and closer to reality as it includes the differences in returns given the exclusive investment options to certain families based on income. In this final column, we adjusted returns from 7% in all other columns to 15%, and the next passage explains this adjustment.</p>
+          <p class="analysis-p">Stock ownership and retirement plan participation data can be found in the Federal Reserve's survey data. Different portfolios have different returns, and accounting for the various differences in returns between portfolios adds a level of complexity beyond the scope of this project. In the visualization below, we use the average return of the S&amp;P 500 index fund for all income classes. This visual shows that, even if all annual returns are the same among income classes, the effect of compounding intensifies the widening gap between income classes. The difference in wealth of a single generation compounds onto the next, regardless of differences in returns. The very last column is both grimmer and closer to reality as it includes the differences in returns given the exclusive investment options to certain families based on income. In this final column, we adjusted returns from 7% in all other columns to 15%, and the next passage explains this adjustment.</p>
+
+          <div id="visual-03" class="analysis-viz">
+            <div class="viz-card">
+              <div class="viz-card-header">
+                <div class="viz-num">Visual 03</div>
+                <div class="viz-title">Pension &amp; Insurance — 20-Year Compounding Timeline</div>
+                <div class="viz-desc">Projected accumulation in the Pension &amp; Insurance category, starting from each income group's 2024 BLS mean spending. Each bracket contributes its actual annual spending each year, compounded at 7% over 20 years. An additional bar shows <em>$200k+</em> at a 15% annual return for comparison. Source: <a href="#linkdata" style="color:var(--accent);text-decoration:none;">Consumer Expenditure Surveys: Income before Taxes, 2024</a> (baseline inputs).</div>
+              </div>
+
+              <div class="viz-timeline-controls">
+                <div class="viz-timeline-year">
+                  Selected year
+                  <strong id="pensionYearLabel">Year 0 · 2024</strong>
+                </div>
+                <div class="viz-slider-wrap">
+                  <div class="viz-slider-label">
+                    <span>2024</span>
+                    <span>Drag timeline →</span>
+                    <span>2044</span>
+                  </div>
+                  <input type="range" class="viz-year-slider" id="pensionYearSlider" min="0" max="20" value="0" step="1" aria-label="Select projection year" />
+                </div>
+                <button type="button" class="viz-play-btn" id="pensionPlayBtn" aria-label="Pause timeline">Pause</button>
+              </div>
+
+              <div class="viz-canvas-wrap viz-canvas-wrap-tall">
+                <canvas id="chart3"></canvas>
+              </div>
+
+              <div class="viz-value-grid" id="pensionValueGrid"></div>
+
+              <div class="viz-caption">Assumes 7% annual return for all income brackets (a long-run market average, not a guarantee). The extra <em>$200k+ (15%)</em> bar uses a 15% return on the same contribution level. Y-axis is capped at a <strong style="color:var(--text);font-weight:500">$1M threshold</strong> — bars grow as the timeline plays; values that cross $1M turn gold.</div>
+              <div class="viz-source">
+                <span class="viz-source-label">Data source</span>
+                <a href="#linkdata">Consumer Expenditure Surveys: Income before Taxes, 2024</a>
+                <span class="viz-source-detail">Baseline and annual contribution inputs: mean expenditure ($) for <em>Personal insurance and pensions</em> by income bracket (rows 553–554). Years 1–20 are projected with assumed 7% and 15% annual returns — not published BLS figures.</span>
+              </div>
+            </div>
+          </div>
 
           <h3 id="analysis-exclusive" class="analysis-subhead">Exclusive Investment Options</h3>
           <p class="analysis-p">One point of interest during our project's discussion was the analysis on exclusive investment options to the wealthy. Of these options, hedge funds and quantitative trading firms were at the forefront of our inquisition, as they have funds exclusive to people of a certain net worth. Spending data specifically for these investment options is not open source. However, simply taking the returns of these funds, being between 10-20%, and simulating it in the visual above, demonstrates how exclusive opportunities to the wealthy continue to widen the already massive gap in investment returns.</p>
 
+          <figure id="visual-scf-stock" class="analysis-figure">
+            <img src="assets/scf-stock-ownership.png" alt="Bar chart showing share of U.S. families with direct or indirect stock holdings by income percentile, 2013–2022, from the Federal Reserve Survey of Consumer Finances" />
+            <figcaption class="analysis-figure-caption">
+              <strong>Figure A.</strong> Families with direct and indirect holdings of stock, by usual income group, 2013–22 surveys. Source: Federal Reserve Board, <a href="#linkscf" style="color:var(--accent);text-decoration:none;">Changes in U.S. Family Finances from 2019 to 2022 (Survey of Consumer Finances)</a>.
+            </figcaption>
+            <p class="analysis-figure-caption" style="margin-top:1rem;">This chart shows what share of U.S. families own stock — either directly (individual shares) or indirectly (through retirement accounts, mutual funds, and similar vehicles). Stock ownership rises sharply with income: in 2022, about <strong>34%</strong> of families in the bottom half of the income distribution held stock, compared with <strong>78%</strong> in the 50th–89.9th percentile and <strong>95%</strong> in the top 10%.</p>
+            <ul class="analysis-figure-points">
+              <li><strong>Key point:</strong> Stock ownership is uneven. Even as participation grew for all groups between 2019 and 2022, the gap between income levels remains large.</li>
+              <li><strong>Why it matters for our analysis:</strong> Our spending charts and compounding visual assume that investment returns can apply across income groups — but this SCF data shows many lower-income families are not in the market at all. The wealth gap is therefore wider than expenditure patterns alone suggest: higher earners not only spend more on pensions and investment-related categories, they are also far more likely to capture stock market gains.</li>
+            </ul>
+          </figure>
+
           <h3 id="analysis-stock-ownership" class="analysis-subhead">Stock Ownership by Income</h3>
+
           <p class="analysis-p">While the above analysis assumed stock ownership in all income groups, survey data by the Federal Reserve shows the drastic differences in stock ownership percentage based on income. This shows that the wealth gap is even more severe, with some families having no gains from public stock ownership.</p>
 
           <h3 id="analysis-data-feminism" class="analysis-subhead">Data Feminism</h3>
@@ -1076,7 +1111,7 @@
     <div class="container">
       <div class="eyebrow">
         <div class="eyebrow-dot"></div>
-        <span class="eyebrow-text">05 — Team</span>
+        <span class="eyebrow-text">04 — Team</span>
       </div>
       <h2 class="section-heading">The people<br/><em>behind the project</em></h2>
 
@@ -1122,7 +1157,7 @@
     <div class="container">
       <div class="eyebrow">
         <div class="eyebrow-dot"></div>
-        <span class="eyebrow-text">06 — Annotated Bibliography</span>
+        <span class="eyebrow-text">05 — Annotated Bibliography</span>
       </div>
       <h2 class="section-heading">Sources &amp;<br/><em>references</em></h2>
 
@@ -1223,8 +1258,7 @@
             </div>
           </div>
 
-          <div class="bib-entry">
-            <div class="bib-title">Changes in U.S. Family Finances from 2019 to 2022 (Survey of Consumer Finances)</div>
+          <div class="bib-entry" id="linkscf">
             <div class="bib-citation">Federal Reserve Board. (2023). <a href="https://www.federalreserve.gov/publications/files/scf23.pdf" target="_blank">federalreserve.gov →</a></div>
             <div class="bib-block">
               <div class="bib-block-tab">
