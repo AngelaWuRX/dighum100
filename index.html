@@ -366,6 +366,119 @@
       gap: 3rem;
       margin-top: 4rem;
     }
+    .viz-card-full {
+      grid-column: 1 / -1;
+    }
+    .viz-timeline-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1.25rem 2rem;
+      margin-bottom: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      border: 1px solid var(--border);
+      background: rgba(200,165,106,0.04);
+    }
+    .viz-timeline-year {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      min-width: 10rem;
+    }
+    .viz-timeline-year strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--text);
+      letter-spacing: 0;
+      margin-top: 0.2rem;
+    }
+    .viz-slider-wrap {
+      flex: 1;
+      min-width: 220px;
+    }
+    .viz-slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 0.5rem;
+    }
+    .viz-year-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--accent-dk), var(--accent));
+      outline: none;
+      cursor: pointer;
+    }
+    .viz-year-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--text);
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 0 4px rgba(200,165,106,0.15);
+      cursor: grab;
+    }
+    .viz-year-slider::-webkit-slider-thumb:active { cursor: grabbing; }
+    .viz-year-slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--text);
+      border: 2px solid var(--accent);
+      cursor: grab;
+    }
+    .viz-play-btn {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.55rem 1rem;
+      background: rgba(200,165,106,0.12);
+      border: 1px solid var(--border);
+      color: var(--accent);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      white-space: nowrap;
+    }
+    .viz-play-btn:hover { background: rgba(200,165,106,0.2); color: var(--text); }
+    .viz-play-btn.is-playing { color: var(--text-dim); }
+    .viz-canvas-wrap-tall { height: 420px; }
+    .viz-value-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+    .viz-value-cell {
+      padding: 0.65rem 0.75rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .viz-value-bracket {
+      font-family: var(--mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      margin-bottom: 0.35rem;
+    }
+    .viz-value-amount {
+      font-family: var(--serif);
+      font-size: 1.05rem;
+      color: var(--text);
+    }
     .viz-card {
       background: var(--bg);
       border: 1px solid var(--border);
@@ -407,6 +520,35 @@
       color: var(--text-dim);
       padding-top: 1rem;
       border-top: 1px solid var(--border);
+    }
+    .viz-source {
+      margin-top: 1rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border);
+      background: rgba(200,165,106,0.04);
+      font-size: 0.72rem;
+      line-height: 1.65;
+      color: var(--text-dim);
+    }
+    .viz-source-label {
+      display: block;
+      font-family: var(--mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .viz-source a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .viz-source a:hover { text-decoration: underline; }
+    .viz-source-detail {
+      display: block;
+      margin-top: 0.35rem;
+      color: #8a8780;
+      font-size: 0.68rem;
     }
 
     /* ── Analysis ── */
@@ -630,10 +772,10 @@
     <a href="#" class="nav-logo">Wealth in the Balance</a>
     <ul class="nav-links">
       <li><a href="#research">Research</a></li>
-      <li><a href="#team">Team</a></li>
       <li><a href="#dataset">Data</a></li>
       <li><a href="#visualizations">Visuals</a></li>
       <li><a href="#analysis">Analysis</a></li>
+      <li><a href="#team">Team</a></li>
       <li><a href="#bibliography">Sources</a></li>
     </ul>
   </nav>
@@ -695,58 +837,12 @@
 
   <hr class="rule" />
 
-  <!-- ── TEAM ── -->
-  <section id="team">
-    <div class="container">
-      <div class="eyebrow">
-        <div class="eyebrow-dot"></div>
-        <span class="eyebrow-text">02 — Team</span>
-      </div>
-      <h2 class="section-heading">The people<br/><em>behind the project</em></h2>
-
-      <div class="team-grid" style="margin-top:3.5rem;">
-        <div class="team-member">
-          <div class="team-initial">M</div>
-          <div class="team-name">Mark</div>
-          <div class="team-role">Writing &amp; Research Lead</div>
-          <p class="team-bio">A rising senior from San Francisco interested in business law and data. Mark serves as the project's primary researcher and lead writer, shaping the analysis and overall narrative of the project.</p>
-        </div>
-        <div class="team-member">
-          <div class="team-initial">K</div>
-          <div class="team-name">Kelly</div>
-          <div class="team-role">Analysis &amp; Narrative</div>
-          <p class="team-bio">A rising junior studying Environmental Economics and Data Science. Kelly focuses on writing and on connecting the visualizations to the broader argument about income inequality and access to consumer expenditures.</p>
-        </div>
-        <div class="team-member">
-          <div class="team-initial">B</div>
-          <div class="team-name">Baijian</div>
-          <div class="team-role">Data &amp; Web Development</div>
-          <p class="team-bio">A rising senior studying Data Science and Computer Science. Baijian prepared datasets for visualizations and led development of the project website.</p>
-        </div>
-        <div class="team-member">
-          <div class="team-initial">A</div>
-          <div class="team-name">Alica</div>
-          <div class="team-role">Writing &amp; Data Transparency</div>
-          <p class="team-bio">A Data Science student interested in business analytics, inequality, and data storytelling. Alica collaborates on the writing process with a focus on transparency in data cleaning, visualization clarity, and the distortions that can emerge when inequality data is oversimplified.</p>
-        </div>
-        <div class="team-member">
-          <div class="team-initial">A</div>
-          <div class="team-name">Angela</div>
-          <div class="team-role">Data Visualization &amp; Web</div>
-          <p class="team-bio">A rising senior studying Data Science. Angela collaborates with Baijian on data visualization and website development, translating complex expenditure data into legible, compelling charts.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <hr class="rule" />
-
   <!-- ── DATASET ── -->
   <section id="dataset">
     <div class="container">
       <div class="eyebrow">
         <div class="eyebrow-dot"></div>
-        <span class="eyebrow-text">03 — Dataset &amp; Cleaning</span>
+        <span class="eyebrow-text">02 — Dataset &amp; Cleaning</span>
       </div>
       <h2 class="section-heading">The data<br/><em>and its limits</em></h2>
 
@@ -817,9 +913,10 @@
     <div class="container">
       <div class="eyebrow">
         <div class="eyebrow-dot"></div>
-        <span class="eyebrow-text">04 — Visualizations</span>
+        <span class="eyebrow-text">03 — Visualizations</span>
       </div>
       <h2 class="section-heading">Patterns in<br/><em>the spending data</em></h2>
+      <p style="margin-top:1.5rem;font-size:0.85rem;line-height:1.75;color:var(--text-dim);max-width:720px;">All charts below draw on published BLS Consumer Expenditure Survey figures, stratified by pre-tax household income. Source: <a href="#linkdata" style="color:var(--accent);text-decoration:none;">Consumer Expenditure Surveys: Income before Taxes, 2024</a>.</p>
 
       <div class="viz-grid">
 
@@ -828,12 +925,17 @@
           <div class="viz-card-header">
             <div class="viz-num">Visual 01</div>
             <div class="viz-title">Spending Share by Income Group</div>
-            <div class="viz-desc">Proportional allocation of total consumer expenditure across major categories, stratified by pre-tax household income bracket. Source: BLS CEX 2024.</div>
+            <div class="viz-desc">Proportional allocation of total consumer expenditure across major categories, stratified by pre-tax household income bracket. Source: <a href="#linkdata" style="color:var(--accent);text-decoration:none;">Consumer Expenditure Surveys: Income before Taxes, 2024</a>.</div>
           </div>
           <div class="viz-canvas-wrap">
             <canvas id="chart1"></canvas>
           </div>
           <div class="viz-caption">Housing dominates spending for lower-income groups but shrinks as a share at higher incomes. Pensions and personal insurance — investment-aligned spending — grow markedly with income. Note that the <em>absolute</em> dollar amounts also differ; share comparisons reveal the structural tilt, not total consumption.</div>
+          <div class="viz-source">
+            <span class="viz-source-label">Data source</span>
+            <a href="#linkdata">Consumer Expenditure Surveys: Income before Taxes, 2024</a>
+            <span class="viz-source-detail">Mean expenditure <em>share</em> (%) by income bracket for Housing, Transportation, Food, Healthcare, Education, Entertainment, Pensions &amp; Insurance, and Other. Income groups: &lt;$15k through $150k+.</span>
+          </div>
         </div>
 
         <!-- Chart 2 -->
@@ -841,12 +943,55 @@
           <div class="viz-card-header">
             <div class="viz-num">Visual 02</div>
             <div class="viz-title">Investment-Related Spending Categories Across Income Groups</div>
-            <div class="viz-desc">Line comparison of three categories with investment dimensions — housing (ownership pathway), education, and pensions &amp; insurance — as a share of total spending per income bracket.</div>
+            <div class="viz-desc">Line comparison of three categories with investment dimensions — housing (ownership pathway), education, and pensions &amp; insurance — as a share of total spending per income bracket. Source: <a href="#linkdata" style="color:var(--accent);text-decoration:none;">Consumer Expenditure Surveys: Income before Taxes, 2024</a>.</div>
           </div>
           <div class="viz-canvas-wrap">
             <canvas id="chart2"></canvas>
           </div>
           <div class="viz-caption">Pension and insurance spending rises steeply with income. Education follows an inverse-bell pattern: declining from lowest to middle brackets, then rising sharply for high earners. Housing as an ownership vehicle (mortgage-bearing) increases proportionally with income, while renter-dominated lower brackets reflect high housing burden without asset accumulation.</div>
+          <div class="viz-source">
+            <span class="viz-source-label">Data source</span>
+            <a href="#linkdata">Consumer Expenditure Surveys: Income before Taxes, 2024</a>
+            <span class="viz-source-detail">Mean expenditure <em>share</em> (%) for Shelter (housing), Education, and Personal insurance and pensions by pre-tax income bracket.</span>
+          </div>
+        </div>
+
+        <!-- Chart 3 — Pension compounding timeline -->
+        <div class="viz-card viz-card-full">
+          <div class="viz-card-header">
+            <div class="viz-num">Visual 03</div>
+            <div class="viz-title">Pension &amp; Insurance — 20-Year Compounding Timeline</div>
+            <div class="viz-desc">Projected accumulation in the Pension &amp; Insurance category, starting from each income group's 2024 BLS mean spending. Each bracket contributes its actual annual spending each year, compounded at 7% over 20 years. An additional bar shows <em>$200k+</em> at a 15% annual return for comparison. Source: <a href="#linkdata" style="color:var(--accent);text-decoration:none;">Consumer Expenditure Surveys: Income before Taxes, 2024</a> (baseline inputs).</div>
+          </div>
+
+          <div class="viz-timeline-controls">
+            <div class="viz-timeline-year">
+              Selected year
+              <strong id="pensionYearLabel">Year 0 · 2024</strong>
+            </div>
+            <div class="viz-slider-wrap">
+              <div class="viz-slider-label">
+                <span>2024</span>
+                <span>Drag timeline →</span>
+                <span>2044</span>
+              </div>
+              <input type="range" class="viz-year-slider" id="pensionYearSlider" min="0" max="20" value="0" step="1" aria-label="Select projection year" />
+            </div>
+            <button type="button" class="viz-play-btn" id="pensionPlayBtn" aria-label="Pause timeline">Pause</button>
+          </div>
+
+          <div class="viz-canvas-wrap viz-canvas-wrap-tall">
+            <canvas id="chart3"></canvas>
+          </div>
+
+          <div class="viz-value-grid" id="pensionValueGrid"></div>
+
+          <div class="viz-caption">Assumes 7% annual return for all income brackets (a long-run market average, not a guarantee). The extra <em>$200k+ (15%)</em> bar uses a 15% return on the same contribution level. Y-axis is capped at a <strong style="color:var(--text);font-weight:500">$1M threshold</strong> — bars grow as the timeline plays; values that cross $1M turn gold.</div>
+          <div class="viz-source">
+            <span class="viz-source-label">Data source</span>
+            <a href="#linkdata">Consumer Expenditure Surveys: Income before Taxes, 2024</a>
+            <span class="viz-source-detail">Baseline and annual contribution inputs: mean expenditure ($) for <em>Personal insurance and pensions</em> by income bracket (rows 553–554). Years 1–20 are projected with assumed 7% and 15% annual returns — not published BLS figures.</span>
+          </div>
         </div>
 
       </div>
@@ -860,7 +1005,7 @@
     <div class="container">
       <div class="eyebrow">
         <div class="eyebrow-dot"></div>
-        <span class="eyebrow-text">05 — Analysis</span>
+        <span class="eyebrow-text">04 — Analysis</span>
       </div>
       <h2 class="section-heading">Connecting data<br/><em>to the question</em></h2>
 
@@ -911,6 +1056,52 @@
           <p class="analysis-p">Our primary dataset does not include race. This is not a neutral omission; as Data Feminism reminds us, what gets left out of data is itself a structural choice. Pairing the CEX with external sources, such as SHRM reporting on racial wage gaps and the Federal Reserve's own demographic breakdowns in the SCF, reveals a pattern of compounded disadvantage: lower income, lower housing equity access, lower pension contribution rates, and lower stock ownership — all concentrated along racial lines. We name this limitation explicitly rather than treating our dataset as a complete picture.</p>
 
           <span class="word-count">~870 words</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule" />
+
+  <!-- ── TEAM ── -->
+  <section id="team">
+    <div class="container">
+      <div class="eyebrow">
+        <div class="eyebrow-dot"></div>
+        <span class="eyebrow-text">05 — Team</span>
+      </div>
+      <h2 class="section-heading">The people<br/><em>behind the project</em></h2>
+
+      <div class="team-grid" style="margin-top:3.5rem;">
+        <div class="team-member">
+          <div class="team-initial">M</div>
+          <div class="team-name">Mark</div>
+          <div class="team-role">Writing &amp; Research Lead</div>
+          <p class="team-bio">A rising senior from San Francisco interested in business law and data. Mark serves as the project's primary researcher and lead writer, shaping the analysis and overall narrative of the project.</p>
+        </div>
+        <div class="team-member">
+          <div class="team-initial">K</div>
+          <div class="team-name">Kelly</div>
+          <div class="team-role">Analysis &amp; Narrative</div>
+          <p class="team-bio">A rising junior studying Environmental Economics and Data Science. Kelly focuses on writing and on connecting the visualizations to the broader argument about income inequality and access to consumer expenditures.</p>
+        </div>
+        <div class="team-member">
+          <div class="team-initial">B</div>
+          <div class="team-name">Baijian</div>
+          <div class="team-role">Data &amp; Web Development</div>
+          <p class="team-bio">A rising senior studying Data Science and Computer Science. Baijian prepared datasets for visualizations and led development of the project website.</p>
+        </div>
+        <div class="team-member">
+          <div class="team-initial">A</div>
+          <div class="team-name">Alica</div>
+          <div class="team-role">Writing &amp; Data Transparency</div>
+          <p class="team-bio">A Data Science student interested in business analytics, inequality, and data storytelling. Alica collaborates on the writing process with a focus on transparency in data cleaning, visualization clarity, and the distortions that can emerge when inequality data is oversimplified.</p>
+        </div>
+        <div class="team-member">
+          <div class="team-initial">A</div>
+          <div class="team-name">Angela</div>
+          <div class="team-role">Data Visualization &amp; Web</div>
+          <p class="team-bio">A rising senior studying Data Science. Angela collaborates with Baijian on data visualization and website development, translating complex expenditure data into legible, compelling charts.</p>
         </div>
       </div>
     </div>
@@ -1013,7 +1204,7 @@
         <div class="bib-category">
           <div class="bib-cat-label">C — Sources on Dataset and Topic</div>
 
-          <div class="bib-entry">
+          <div class="bib-entry" id="linkdata">
             <div class="bib-title">Consumer Expenditure Surveys: Income before Taxes, 2024</div>
             <div class="bib-citation">U.S. Bureau of Labor Statistics. (2025). <a href="https://www.bls.gov/cex/tables/calendar-year/mean-item-share-average-standard-error/cu-income-before-taxes-2024.xlsx" target="_blank">BLS CEX Table →</a></div>
             <div class="bib-block">
@@ -1264,6 +1455,208 @@
         }
       }
     });
+
+    // ── Chart 3: Pension & Insurance — 20-Year Compounding Timeline ──
+    const pensionBrackets = ['<$15k','$15–29k','$30–39k','$40–49k','$50–69k','$70–99k','$100–149k','$150–199k','$200k+'];
+    const pensionBaselines = [419, 905, 1994, 2843, 4514, 7214, 12006, 18575, 32642]; // BLS CEX 2024 mean
+    const RETURN_RATE = 0.07;
+    const RETURN_RATE_TOP = 0.15;
+    const TOP_BRACKET_IDX = 8; // $200k+
+    const PROJECTION_YEARS = 20;
+    const THRESHOLD = 1_000_000; // $1M y-axis cap
+    const PLAY_INTERVAL_MS = 600;
+
+    const pensionLineColors = [
+      '#5a6a7a', '#6a7a8a', '#7a8a9a', '#8a9aaa',
+      '#a09070', '#b0a080', '#c8a56a', '#d8b57a', '#e8c090',
+      '#ff9060'
+    ];
+    const pensionChartLabels = [...pensionBrackets, '$200k+ (15%)'];
+
+    function projectPension(baseline, annualAdd, rate, years) {
+      const series = [baseline];
+      let balance = baseline;
+      for (let y = 1; y <= years; y++) {
+        balance = balance * (1 + rate) + annualAdd;
+        series.push(Math.round(balance));
+      }
+      return series;
+    }
+
+    function buildPensionSeries() {
+      const series = pensionBrackets.map((label, i) => ({
+        label,
+        data: projectPension(pensionBaselines[i], pensionBaselines[i], RETURN_RATE, PROJECTION_YEARS)
+      }));
+      series.push({
+        label: '$200k+ (15%)',
+        data: projectPension(
+          pensionBaselines[TOP_BRACKET_IDX],
+          pensionBaselines[TOP_BRACKET_IDX],
+          RETURN_RATE_TOP,
+          PROJECTION_YEARS
+        )
+      });
+      return series;
+    }
+
+    let pensionSelectedYear = 0;
+    let pensionChart;
+    let pensionPlaying = true;
+    let pensionTimer = null;
+
+    function formatDollars(n) {
+      if (n >= 1_000_000) return '$' + (n / 1_000_000).toFixed(2) + 'M';
+      if (n >= 1_000) return '$' + Math.round(n / 1_000) + 'k';
+      return '$' + n.toLocaleString();
+    }
+
+    function updatePensionUI() {
+      const calendarYear = 2024 + pensionSelectedYear;
+      document.getElementById('pensionYearLabel').textContent = `Year ${pensionSelectedYear} · ${calendarYear}`;
+      document.getElementById('pensionYearSlider').value = pensionSelectedYear;
+
+      const series = buildPensionSeries();
+      const yearValues = series.map(s => s.data[pensionSelectedYear]);
+      pensionChart.data.labels = pensionChartLabels;
+      pensionChart.data.datasets[0].label = `Balance in ${calendarYear}`;
+      pensionChart.data.datasets[0].data = yearValues;
+      pensionChart.data.datasets[0].backgroundColor = yearValues.map((v, i) =>
+        v >= THRESHOLD ? '#e8c090' : pensionLineColors[i] + 'cc'
+      );
+      pensionChart.data.datasets[0].borderColor = yearValues.map((v, i) =>
+        v >= THRESHOLD ? '#c8a56a' : pensionLineColors[i]
+      );
+      pensionChart.update();
+
+      const grid = document.getElementById('pensionValueGrid');
+      grid.innerHTML = series.map((s, i) => `
+        <div class="viz-value-cell" style="border-left: 3px solid ${pensionLineColors[i]}">
+          <div class="viz-value-bracket">${pensionChartLabels[i]}</div>
+          <div class="viz-value-amount">${formatDollars(s.data[pensionSelectedYear])}</div>
+        </div>
+      `).join('');
+    }
+
+    const thresholdLinePlugin = {
+      id: 'thresholdLine',
+      afterDraw(chart) {
+        const { ctx, chartArea, scales } = chart;
+        const y = scales.y.getPixelForValue(THRESHOLD);
+        if (y < chartArea.top || y > chartArea.bottom) return;
+        ctx.save();
+        ctx.strokeStyle = 'rgba(200,165,106,0.55)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([6, 4]);
+        ctx.beginPath();
+        ctx.moveTo(chartArea.left, y);
+        ctx.lineTo(chartArea.right, y);
+        ctx.stroke();
+        ctx.fillStyle = 'rgba(200,165,106,0.85)';
+        ctx.font = "10px 'Space Mono', monospace";
+        ctx.fillText('$1M threshold', chartArea.left + 6, y - 6);
+        ctx.restore();
+      }
+    };
+
+    const ctx3 = document.getElementById('chart3').getContext('2d');
+    const initialSeries = buildPensionSeries();
+    pensionChart = new Chart(ctx3, {
+      type: 'bar',
+      plugins: [thresholdLinePlugin],
+      data: {
+        labels: pensionChartLabels,
+        datasets: [{
+          label: 'Balance in 2024',
+          data: initialSeries.map(s => s.data[0]),
+          backgroundColor: pensionLineColors.map(c => c + 'cc'),
+          borderColor: pensionLineColors,
+          borderWidth: 1.2,
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 450, easing: 'easeOutQuart' },
+        interaction: { mode: 'nearest', intersect: true },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              title: items => items[0].label,
+              label: ctx => {
+                const val = ctx.raw;
+                const hit = val >= THRESHOLD ? ' ✓ crossed $1M' : '';
+                return ` ${ctx.dataset.label}: ${formatDollars(val)}${hit}`;
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { font: { size: 9 }, maxRotation: 30 }
+          },
+          y: {
+            min: 0,
+            max: THRESHOLD,
+            grid: { color: '#1e1e1c' },
+            ticks: {
+              font: { size: 9 },
+              stepSize: 200000,
+              callback: v => formatDollars(v)
+            }
+          }
+        }
+      }
+    });
+
+    function setPlayButtonState() {
+      const btn = document.getElementById('pensionPlayBtn');
+      btn.textContent = pensionPlaying ? 'Pause' : 'Play';
+      btn.classList.toggle('is-playing', pensionPlaying);
+      btn.setAttribute('aria-label', pensionPlaying ? 'Pause timeline' : 'Play timeline');
+    }
+
+    function startPensionPlayback() {
+      if (pensionTimer) return;
+      pensionPlaying = true;
+      setPlayButtonState();
+      pensionTimer = setInterval(() => {
+        if (pensionSelectedYear >= PROJECTION_YEARS) {
+          pensionSelectedYear = 0;
+        } else {
+          pensionSelectedYear += 1;
+        }
+        updatePensionUI();
+      }, PLAY_INTERVAL_MS);
+    }
+
+    function stopPensionPlayback() {
+      pensionPlaying = false;
+      setPlayButtonState();
+      if (pensionTimer) {
+        clearInterval(pensionTimer);
+        pensionTimer = null;
+      }
+    }
+
+    document.getElementById('pensionYearSlider').addEventListener('input', e => {
+      pensionSelectedYear = parseInt(e.target.value, 10);
+      updatePensionUI();
+    });
+
+    document.getElementById('pensionPlayBtn').addEventListener('click', () => {
+      if (pensionPlaying) {
+        stopPensionPlayback();
+      } else {
+        startPensionPlayback();
+      }
+    });
+
+    updatePensionUI();
+    startPensionPlayback();
   </script>
 
 </body>
