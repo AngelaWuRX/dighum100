@@ -56,7 +56,11 @@ Taking all the above into consideration with respect to racial representations i
 
 Stock ownership and retirement plan participation data can be found in the Federal Reserve’s survey data. 
 
+![Figure A: Families with direct and indirect holdings of stock, by usual income group, 2013–22 surveys](assets/scf-stock-ownership.png)
 
+*Figure A.* Families with direct and indirect holdings of stock, by usual income group, 2013–22 surveys. Source: Federal Reserve Board, *Changes in U.S. Family Finances from 2019 to 2022 (Survey of Consumer Finances)*.
+
+This chart shows the share of U.S. families that own stock (directly or through retirement accounts and funds) by income percentile. In 2022, about 34% of families in the bottom half of the income distribution held stock, compared with 78% in the 50th–89.9th percentile and 95% in the top 10%. Even as participation grew for all groups, the gap between income levels remains large — meaning many lower-income families never capture stock market gains, and the wealth gap is wider than our spending data alone suggests.
 
 
 
